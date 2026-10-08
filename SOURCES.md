@@ -1,15 +1,13 @@
 # Sources
 
-The active demo uses Julian's Tailor Shop. No business claims are marked verified. Retrieved dates below use the user's date, October 8, 2026.
+Public facts retrieved October 8, 2026; owner actions are fictional.
 
-| Fact or number | Source | Status |
+| Data | Source | Use |
 | --- | --- | --- |
-| Julian's Tailor Shop | User-selected replacement business, 2026-10-08 | Name unverified; all other facts unknown |
-| Glenn's permanently closed | User report, 2026-10-08 | Removed from active demo; not independently verified |
-| Phone, hours, services, pricing, rush handling, capacity, turnaround, open status | No verified shop source | Unknown |
-| Two-day urgency threshold | Project brief; implemented by us | Demo heuristic, not shop policy |
-| 30 evaluation cases and eight curveballs | Project brief; messages self-authored by us | Fictional, not customer data |
-| Evaluation percentages and counts | `eval/run_eval.py`, fixed time 2026-10-08 at noon America/New_York | Computed from authored annotations; see report |
-| Deadline conventions, input limit of 5,000 characters, one retry | Project brief and implementation decisions in `ASSUMPTIONS.md` | Demo design choices |
+| Store name, address, phone, published hours | https://julianschapelhill.com/ | Business profile; does not prove current open status |
+| 250 product records, descriptions, images, variants, prices, snapshot availability | https://julianschapelhill.com/products.json?limit=250 | Saved at `catalog/products.json`; first page only |
+| Return exclusions, 30-day return/exchange window, 90-day complimentary custom-tailoring alterations | https://julianschapelhill.com/policies/refund-policy | Source-linked policy response |
+| Two-day urgency threshold | Original project heuristic | Not a store promise |
+| $45 alteration quote, pickup timing, owner approvals and status updates | Fictional demo inputs | No published shop price or real commitment |
 
-No prices, testimonials, shop policies, or service claims were copied from directories. The supplied founding/date and numeric columns were not interpreted or used.
+Alteration service feasibility, labor prices, rush handling and capacity remain unverified and require owner review. No business was contacted.

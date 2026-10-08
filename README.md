@@ -1,61 +1,67 @@
-# Rush Alteration Intake
+# Julian’s Concierge — Owner-driven local demo
 
-An independent tailor-intake demo. A customer message becomes a structured ticket and a reply for human review. Every ticket remains `PENDING_SHOP_CONFIRMATION`.
-
-Independent demo built from public information. Not affiliated with the business.
+An independent hackathon prototype. A customer sends their initial request, and the offline agent creates the owner's ticket, asks for missing details, updates the **same ticket**, and returns it to the owner. The original customer request stays visible in the owner's brief. Owner questions are relayed to the customer and the answer is returned to the owner's inbox. Owner decisions unlock simulated acceptance, payment and fulfillment. Owners can also open an intake themselves.
 
 ## Run locally
 
-Python 3.11 or newer:
+From this folder (the app lives inside the nested `Lafayette-Hackathon/` directory):
 
 ```sh
 python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-LLM_PROVIDER=mock uvicorn app.main:app --reload
+.venv/bin/pip install -r requirements.txt
+LLM_PROVIDER=mock .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-Open http://127.0.0.1:8000. The mock needs no API key. Each submission writes a separate line to `data/tickets.jsonl`. `/demo` accepts the same JSON as `/chat`: `{"message":"Please hem my pants tomorrow"}`. `/docs` has the API interface. Use fictional contact details; ticket storage contains the raw message and contact fields. This is a local demo without authentication, retention controls, or production deployment configuration.
+Open http://127.0.0.1:8000 and click **Play owner workflow** for the seven-step walkthrough. Both inboxes are interactive. On mobile, use Customer / Owner / Operations tabs. No deployment, native build or API key is required.
 
-## Test and evaluate
+## Manual owner scenario
+
+1. In Customer, send `I need my pants hemmed by Friday for a wedding`. It appears as a customer message and creates a pants/hem ticket for Owner.
+2. The agent asks Customer for a phone or email and tells Owner which fields are missing.
+3. In Customer, send `My email is demo@example.com`. The ticket keeps its ID and returns to Owner.
+4. In Owner, send `ask customer what material are the pants?`.
+5. In Customer, send `The pants are silk`. The material and answer are returned to Owner on the same ticket.
+6. Owner sends `quote $45 ready by Friday at 3pm` (fictional demo price). Customer clicks **Simulate payment**.
+7. Owner sends `ready — collect Friday`, then `complete — collected`.
+
+Quick-action buttons fill the owner composer; press Send to execute. A quote is blocked while required fields are missing. Payment requires owner confirmation. Ready requires simulated payment; completion requires Ready. An unpaid request can be declined or cancelled. Normal owner messages are relayed without changing status.
+
+For an owner-started request instead, send `intake Alex needs pants hemmed by Friday for a wedding` in Owner. The guided walkthrough starts with the customer's own message.
+
+## Shopping scenario
+
+In Customer, use **Carolina gift** or text `Carolina gift for dad under $160, blue polo size M`. The agent filters a saved public catalog by budget, category, theme, size, color and variant availability. Choose a variant and **Ask owner to confirm**. Owner sends `approve — stock checked; pickup tomorrow at 2pm`; Customer can then simulate payment. No online availability snapshot is treated as store stock.
+
+`catalog/products.json` contains 250 products from the first page of Julian’s public Shopify endpoint, downloaded October 8, 2026. It is a partial catalog, not a live stock feed. Product cards retain official links and images. Images load from the store CDN and require internet; the workflow and saved catalog run locally. Prices exclude tax and shipping.
+
+## What was upgraded
+
+The original FastAPI alteration intake, extraction, deterministic policy evaluation, response guards and 30-case evaluation remain available at `/intake`, `/chat`, and `/demo`. The main page now adds linked customer/owner inboxes, persistent multi-turn sessions, owner-started intake, missing-field follow-up, owner clarification, catalog recommendations, approval/decline, simulated checkout, ready/completed notifications, an activity log and JSON export.
+
+The new workflow is in `app/concierge.py`; the browser uses plain HTML, CSS and JavaScript with no frontend dependencies. Both inboxes are controlled on the same page. Reload restores that browser’s session. **New conversation** creates another session without deleting previous records.
+
+## Verify
 
 ```sh
 .venv/bin/python -m pytest -q
 .venv/bin/python eval/run_eval.py
+node --check web/demo.js
 ```
 
-The evaluation writes `eval/report.md` and exits unsuccessfully on mismatches or claim violations. Its 30 cases are self-authored fictional examples. `curveballs.yaml` contains eight additional demo inputs.
+Tests cover the original intake plus owner/customer detail roundtrips, stable ticket IDs, corrected contact/deadline, material flags, blocked premature quotes/payments/fulfillment, catalog filtering, invalid selection, declines, policy responses and persistence.
 
-## Providers
+## iOS option
 
-`LLM_PROVIDER` accepts `mock` (default), `openai`, or `anthropic`. Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` for a live provider. Override models with `OPENAI_MODEL` or `ANTHROPIC_MODEL`. Keys stay on the server. Live adapters are included but have not been tested against paid APIs. The offline mock recognizes a limited English vocabulary; it does not translate. Provider failures retry once and then request human review.
-
-## Architecture
-
-`extract.py` validates provider output using Pydantic. `dates.py` resolves deadlines against an injected New York time. `policy.py` evaluates both extraction and raw input using deterministic rules. `compose.py` uses fixed templates. `guard.py` permits only the exact approved composition and rejects unsafe phrases; arbitrary generated phrasing is never sent. `main.py` creates and saves the ticket. The frontend renders user content as text.
-
-## Business configuration
-
-Edit `config/business.yaml`. Each fact has a value, verification status, source, and retrieval date. Only a verified service list can suppress an unknown-service handoff; use alteration enum values such as `hem` and `sleeve_length`. All requests still need tailor confirmation. The reply conservatively leaves pricing, rush handling, and turnaround to the tailor even if future config records those facts. Swap the config to change the business profile. The UI reads the profile name from the config.
-
-Julian's Tailor Shop is the user-selected demo business. Its address and website are unknown. Phone, website, hours, services, prices, rush policy, capacity, turnaround, and current open status remain unknown. No shop contact was made.
-
-## iPhone demo
-
-The demo runs as a mobile website in Simulator Safari; it does not require a native app build. At narrow widths, Request and Review ticket links stay at the top. Submitting a request moves to the ticket, which shows garments, requested alterations, and the requested deadline. Unknown facts and JSON are expandable.
-
-Start the server, then on a Mac with full Xcode and an installed iOS Simulator runtime:
+This is a responsive website, so iOS Simulator is optional. With a working installed runtime and the server running:
 
 ```sh
 bash scripts/ios-demo.sh
 ```
 
-If only Command Line Tools are selected:
+This opens the same localhost app in Simulator Safari. No native app is built. Browser and actual simulator visual verification remain pending in this session because computer control/runtime access was not approved.
 
-```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer bash scripts/ios-demo.sh
-```
+## Local demo boundaries
 
-The script boots an available iPhone and opens http://127.0.0.1:8000 in Safari. For a physical iPhone on the same network, start Uvicorn with `--host 0.0.0.0` and open the Mac's local network address with port 8000. Use fictional data and a trusted network for this unauthenticated demo.
+The concierge is **deterministic and offline**, not a live language model. Existing OpenAI/Anthropic adapters apply only to the original intake; the new demo explicitly uses the mock extractor. No real SMS, reservations, appointments, payment, stock deductions or refunds occur. Every owner decision/quote/timing claim is simulated and attributed to the owner. Use fictional customer details.
 
-Verification on the current Mac uses browser testing at iPhone screen dimensions. Actual iOS Safari verification remains pending because Xcode/Simulator is unavailable.
+Sessions live in ignored `data/sessions.json`, original intake submissions in ignored `data/tickets.jsonl`. Run a single process on loopback: the demo has no authentication, roles are simulated, and file persistence is not safe for multiple workers. Garments of the same type are merged in multi-turn intake; separate item IDs and a stronger extractor are needed for several distinct garments of the same type. Arbitrary natural language and correction/removal of previously stated garment changes are not fully supported. The original intake ticket contains its initial pending status; the surrounding session is the workflow state.

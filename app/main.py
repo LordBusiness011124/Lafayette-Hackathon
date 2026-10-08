@@ -14,7 +14,9 @@ from app.extract import extract
 from app.policy import evaluate, LABELS
 from app.compose import compose
 from app.guard import guard
-app=FastAPI(title="Rush Alteration Intake")
+from app.concierge import router as concierge_router
+app=FastAPI(title="Julian's Concierge Demo")
+app.include_router(concierge_router)
 lock=Lock()
 class ChatInput(Model):
     message: str = Field(min_length=1,max_length=5000)
@@ -39,4 +41,6 @@ def config():
     return {"facts":business.model_dump(mode="json"),"unknown_fields":[k for k,f in business if f.status!="verified"],"reason_labels":LABELS,"provider":os.getenv("LLM_PROVIDER","mock")}
 @app.get("/")
 def index():return FileResponse(ROOT/"web/index.html")
+@app.get("/intake")
+def intake():return FileResponse(ROOT/"web/intake.html")
 app.mount("/static",StaticFiles(directory=ROOT/"web"),name="static")

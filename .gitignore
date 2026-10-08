@@ -3,6 +3,8 @@ __pycache__/
 .pytest_cache/
 .env
 data/*.jsonl
+data/sessions.json
+data/sessions.tmp
 .capture/
 output/
 .playwright-cli/

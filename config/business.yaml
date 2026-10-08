@@ -1,29 +1,28 @@
-# TODO: Verify Julian's business details before marking any fact verified.
 name:
-  value: Julian's Tailor Shop
-  status: unverified
-  source: User-selected business, 2026-10-08
-  retrieved_on: null
+  value: Julian’s Chapel Hill
+  status: verified
+  source: https://julianschapelhill.com/
+  retrieved_on: '2026-10-08'
 address:
-  value: null
-  status: unknown
-  source: null
-  retrieved_on: null
+  value: 135 E Franklin St, Chapel Hill, NC
+  status: verified
+  source: https://julianschapelhill.com/
+  retrieved_on: '2026-10-08'
 phone:
-  value: null
-  status: unknown
-  source: null
-  retrieved_on: null
+  value: (919) 942-4563
+  status: verified
+  source: https://julianschapelhill.com/
+  retrieved_on: '2026-10-08'
 website:
-  value: null
-  status: unknown
-  source: null
-  retrieved_on: null
+  value: https://julianschapelhill.com/
+  status: verified
+  source: https://julianschapelhill.com/
+  retrieved_on: '2026-10-08'
 hours:
-  value: null
-  status: unknown
-  source: null
-  retrieved_on: null
+  value: Tuesday–Saturday, 10am–5pm (published hours; current opening status unconfirmed)
+  status: verified
+  source: https://julianschapelhill.com/
+  retrieved_on: '2026-10-08'
 services_public:
   value: []
   status: unknown
