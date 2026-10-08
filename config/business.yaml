@@ -1,0 +1,51 @@
+# TODO: Verify Julian's business details before marking any fact verified.
+name:
+  value: Julian's Tailor Shop
+  status: unverified
+  source: User-selected business, 2026-10-08
+  retrieved_on: null
+address:
+  value: null
+  status: unknown
+  source: null
+  retrieved_on: null
+phone:
+  value: null
+  status: unknown
+  source: null
+  retrieved_on: null
+website:
+  value: null
+  status: unknown
+  source: null
+  retrieved_on: null
+hours:
+  value: null
+  status: unknown
+  source: null
+  retrieved_on: null
+services_public:
+  value: []
+  status: unknown
+  source: null
+  retrieved_on: null
+unsupported_or_unknown_services:
+  value: []
+  status: unknown
+  source: null
+  retrieved_on: null
+price_list:
+  value: null
+  status: unknown
+  source: null
+  retrieved_on: null
+rush_policy:
+  value: null
+  status: unknown
+  source: null
+  retrieved_on: null
+capacity_turnaround:
+  value: null
+  status: unknown
+  source: null
+  retrieved_on: null
